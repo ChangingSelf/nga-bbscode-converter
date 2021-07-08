@@ -9,6 +9,17 @@ def replace_list(matched):
     l = re.sub(r"[-*] ","[*]",l)
     l = "[list]\n{}\n[/list]".format(l)
     return l
+def replace_italic(matched):
+    # 到了第53个中文字符的时候NGA论坛就会报错：一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三/* bbscode i too long */
+    # 所以需要每50个字符就分一个[i]标签
+    italic = matched.group(1)
+    step = 50
+    italics = [italic[i:i+step] for i in range(0,len(italic),step)]
+    italic = ''
+    for item in italics:
+        italic +="[i]{}[/i]".format(item)
+
+    return italic
 
 def md_to_bbscode(md_str:str):
     '''
@@ -24,7 +35,7 @@ def md_to_bbscode(md_str:str):
     # 加粗
     bbscode = re.sub(r"\*\*(.*?)\*\*",r"[b]\1[/b]",bbscode)
     # 斜体
-    bbscode = re.sub(r"\*(.*?)\*",r"[i]\1[/i]",bbscode)
+    bbscode = re.sub(r"\*(.*?)\*",replace_italic,bbscode)
     # 下划线
     bbscode = re.sub(r"<u>(.*?)</u>",r"[u]\1[/u]",bbscode)
     # 删除线
