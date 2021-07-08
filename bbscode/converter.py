@@ -45,4 +45,7 @@ def md_to_bbscode(md_str:str):
     # 列表
     bbscode = re.sub(r"(([-|*] (.*)\n?)+)",replace_list,bbscode)
 
+    # 骰点表达式
+    bbscode = re.sub(r"((\d*[Dd]\d+\+?)+)",r"[dice]\1[/dice]",bbscode)
+
     return bbscode
