@@ -20,6 +20,23 @@ def replace_italic(matched):
         italic +="[i]{}[/i]".format(item)
 
     return italic
+def replace_collapse(matched):
+    '''
+    <details>
+        <summary>点击查看详细内容</summary>
+    </details>
+    '''
+    collapse = matched.group(1)
+    summary = re.findall(r"<summary>(.*?)</summary>",collapse,flags=re.DOTALL)
+    collapse = re.sub(r"<summary>(.*?)</summary>","",collapse,flags=re.DOTALL)
+    if summary:# 有标题
+        summary = re.sub(r"\n",r" ",summary[0])
+        collapse = "[collapse={}]{}[/collapse]".format(summary,collapse)
+    else:
+        collapse = "[collapse]{}[/collapse]".format(collapse)
+
+    return collapse
+
 
 def md_to_bbscode(md_str:str):
     '''
@@ -49,6 +66,6 @@ def md_to_bbscode(md_str:str):
     bbscode = re.sub(r"(((\d*[Dd]\d+)|(\+\d*[Dd]\d+)|(\+\d+))+)",r"[dice]\1[/dice]",bbscode)
 
     # 折叠
-    # bbscode = re.sub(r"<details>(.*?)</details>",flags=re.DOTALL)
+    bbscode = re.sub(r"<details>(.*?)</details>",replace_collapse,bbscode,flags=re.DOTALL)
 
     return bbscode
