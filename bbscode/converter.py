@@ -33,19 +33,22 @@ def md_to_bbscode(md_str:str):
     # 标题，注意设置flag为MULTILINE以改变^的语义
     bbscode = re.sub(r"^(#+)\s?(.*)",r"[h]\2[/h]",bbscode,flags=re.MULTILINE)
     # 加粗
-    bbscode = re.sub(r"\*\*(.*?)\*\*",r"[b]\1[/b]",bbscode)
+    bbscode = re.sub(r"\*\*(.*?)\*\*",r"[b]\1[/b]",bbscode,flags=re.DOTALL)
     # 斜体
-    bbscode = re.sub(r"\*(.*?)\*",replace_italic,bbscode)
+    bbscode = re.sub(r"\*(.*?)\*",replace_italic,bbscode,flags=re.DOTALL)
     # 下划线
-    bbscode = re.sub(r"<u>(.*?)</u>",r"[u]\1[/u]",bbscode)
+    bbscode = re.sub(r"<u>(.*?)</u>",r"[u]\1[/u]",bbscode,flags=re.DOTALL)
     # 删除线
-    bbscode = re.sub(r"~~(.*?)~~",r"[del]\1[/del]",bbscode)
+    bbscode = re.sub(r"~~(.*?)~~",r"[del]\1[/del]",bbscode,flags=re.DOTALL)
     # 引用块
-    bbscode = re.sub(r"((> (.*)\n?)+)",replace_quote,bbscode)
+    bbscode = re.sub(r"((> (.*)\n?)+)",replace_quote,bbscode,flags=re.DOTALL)
     # 列表
-    bbscode = re.sub(r"(([-|*] (.*)\n?)+)",replace_list,bbscode)
+    bbscode = re.sub(r"(([-|*] (.*)\n?)+)",replace_list,bbscode,flags=re.DOTALL)
 
     # 骰点表达式
     bbscode = re.sub(r"(((\d*[Dd]\d+)|(\+\d*[Dd]\d+)|(\+\d+))+)",r"[dice]\1[/dice]",bbscode)
+
+    # 折叠
+    # bbscode = re.sub(r"<details>(.*?)</details>",flags=re.DOTALL)
 
     return bbscode
