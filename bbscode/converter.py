@@ -13,7 +13,7 @@ def replace_italic(matched):
     # 到了第53个中文字符的时候NGA论坛就会报错：一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三/* bbscode i too long */
     # 所以需要每50个字符就分一个[i]标签
     italic = matched.group(1)
-    step = 50
+    step = 40
     italics = [italic[i:i+step] for i in range(0,len(italic),step)]
     italic = ''
     for item in italics:
@@ -48,7 +48,7 @@ def md_to_bbscode(md_str:str):
     # 图片
     bbscode = re.sub(r"\!\[(.*?)\]\((.*?)\)",r"[img]\2[/img]",bbscode)
     # 标题，注意设置flag为MULTILINE以改变^的语义
-    bbscode = re.sub(r"^(#+)\s?(.*)",r"[h]\2[/h]",bbscode,flags=re.MULTILINE)
+    bbscode = re.sub(r"^(#+)\s?(.*)",r"[align=center][size=150%][b]\2[/b][/size][/align]",bbscode,flags=re.MULTILINE)
     # 加粗
     bbscode = re.sub(r"\*\*(.*?)\*\*",r"[b]\1[/b]",bbscode,flags=re.DOTALL)
     # 斜体
@@ -61,10 +61,6 @@ def md_to_bbscode(md_str:str):
     bbscode = re.sub(r"((> (.*)\n?)+)",replace_quote,bbscode,flags=re.DOTALL)
     # 列表
     bbscode = re.sub(r"(([-|*] (.*)\n?)+)",replace_list,bbscode,flags=re.DOTALL)
-
-    # 骰点表达式
-    bbscode = re.sub(r"(((\d*[Dd]\d+)|(\+\d*[Dd]\d+)|(\+\d+))+)",r"[dice]\1[/dice]",bbscode)
-
     # 折叠
     bbscode = re.sub(r"<details>(.*?)</details>",replace_collapse,bbscode,flags=re.DOTALL)
 
